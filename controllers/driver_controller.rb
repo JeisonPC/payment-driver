@@ -1,17 +1,18 @@
 require 'json'
-require_relative 'wompi_service'
 
-class DriverController < Sinatra::Base
 
-  private
 
-  def calculate_total_amount(driver_info, final_location)
+class DriverController < Sinatra::Controller
 
-    base_cop = 3500
+  post '/calculate_total_amount' do
+    # Supongamos que recibes la información del conductor en el cuerpo de la solicitud
+    request_body = JSON.parse(request.body.read, symbolize_names: true)
+    driver_info = request_body[:driver_info]
 
-    # Calcula el monto total según la lógica de tarifas
-    total_amount = base_cop + (driver_info[:distance_traveled] * 1000) + (driver_info[:time_elapsed] * 200)
+    # Calcula el monto total utilizando el servicio de tarifas
+    total_amount = CostService.calculate_total_amount(driver_info)
 
-    return total_amount
+    # Devuelve el resultado como JSON
+    { total_amount: total_amount }.to_json
   end
 end

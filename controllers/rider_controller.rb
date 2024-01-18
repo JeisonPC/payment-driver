@@ -1,6 +1,6 @@
 require_relative '../services/api_service'
 
-class RiderController < Sinatra::Base
+class RiderController < Sinatra::Controller
   get '/rider/:id' do
     # lógica para obtener información del pasajero con el ID especificado
   end
