@@ -1,7 +1,6 @@
 require 'sequel'
 
 class PaymentSource < Sequel::Model
-  # Define las columnas de la tabla
   set_primary_key :id
   String :bin
   String :last_four

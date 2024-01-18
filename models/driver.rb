@@ -1,11 +1,10 @@
 require 'dry-validation'
 
 class Driver < Sequel::Model
-  # Atributos
-  set_table_name 'drivers'
-  attribute :nombre, String
-  attribute :apellido, String
-  attribute :email, String
-  attribute :current_location, 'geography(POINT)'
-  attribute :edad, Integer
+  set_primary_key :id
+  String :nombre
+  String :apellido
+  String :email
+  column :'geography(POINT)', :current_location, type: 'geography(POINT)'
+  Integer :edad
 end

@@ -8,5 +8,5 @@ class Rider < Sequel::Model
   attribute :payment_method, String
   attribute :edad, Integer
 
-  one_to_many :trips
+  one_to_many :rides
 end
