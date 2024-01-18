@@ -1,25 +1,22 @@
 require 'dry-validation'
 
-class DriverContract < Dry::Validation::Contract
+class CalculateTotalAmountContract < Dry::Validation::Contract
   params do
-    required(:nombre).filled(:string)
-    required(:apellido).filled(:string)
-    required(:edad).filled(:integer, gteq?: 18)
+    required(:driver_info).hash do
+      required(:id).filled(:integer)
+      required(:distance_traveled).filled(:integer)
+      required(:time_elapsed).filled(:integer)
+    end
   end
 end
 
-class RiderContract < Dry::Validation::Contract
+class CreatePaymentSourceContract < Dry::Validation::Contract
   params do
-    required(:nombre).filled(:string)
-    required(:apellido).filled(:string)
-    required(:edad).filled(:integer, gteq?: 18)
-  end
-end
-
-class TripContract < Dry::Validation::Contract
-  params do
-    required(:nombre).filled(:string)
-    required(:apellido).filled(:string)
-    required(:edad).filled(:integer, gteq?: 18)
+    required(:tokenized_card_info).hash do
+      required(:type).filled(:string)
+      required(:token).filled(:string)
+      required(:customer_email).filled(:string)
+      required(:acceptance_token).filled(:string)
+    end
   end
 end

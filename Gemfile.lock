@@ -3,6 +3,7 @@ GEM
   specs:
     base64 (0.1.1)
     bigdecimal (3.1.5)
+    dotenv (2.8.1)
     json (2.7.1)
     multi_json (1.15.0)
     mustermann (3.0.0)
@@ -31,6 +32,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  dotenv (~> 2.7, >= 2.7.7)
   json
   sequel
   sinatra
