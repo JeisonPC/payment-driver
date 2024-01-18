@@ -19,7 +19,12 @@ post '/calculate_total_amount' do
 
   # Calcula el monto total utilizando el servicio de tarifas
   total_amount = CostService.calculate_total_amount(driver_info)
+  id = driver_info[:id]
 
   # Devuelve el resultado como JSON
-  { total_amount: total_amount }.to_json
+  { total_amount: total_amount, id: id }.to_json
 end
+
+# Rider
+
+post '/'
