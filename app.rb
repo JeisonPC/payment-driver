@@ -170,7 +170,7 @@ post '/ride_accomplished' do
     reference = generate_payment_reference(ride.id)
 
     # Generar la firma de integridad
-    integrity_signature = generate_integrity_signature(reference, total_amount, "COP", "test_integrity_bX65aQXMlWourC412KUuuCOKPyjcBxGY")
+    integrity_signature = generate_integrity_signature(reference, total_amount, "COP", "#{ENV['INTEGRITY_KEY']}")
 
     # Realizar la transacción usando ApiService después de asegurarse de que el viaje se haya marcado como completado
     transaction_result = ApiService.make_request(
