@@ -11,6 +11,8 @@ require_relative 'contracts'
 
 require_relative 'models/payment_source'
 require_relative 'models/ride'
+require_relative 'models/driver'
+
 
 
 before do
@@ -114,6 +116,44 @@ post '/request_ride' do
       ride.update(driver: driver, status: 'ongoing')
 
       { status: 'success', ride_id: ride.id }.to_json
+    else
+      status 422
+      { error: result.errors.to_h }.to_json
+    end
+  rescue StandardError => e
+    status 500
+    { error: "Error al procesar la solicitud: #{e.message}" }.to_json
+  end
+end
+
+post '/ride_accomplished' do
+  begin
+    input = JSON.parse(request.body.read, symbolize_names: true)
+
+    result = CompleteRideContract.new.call(input)
+
+    if result.success?
+      ride_id = input[:ride_id]
+      end_location = Sequel.function(:ST_GeographyFromText, "POINT(#{input[:latitude]} #{input[:longitude]})")
+
+      # Obtener información del viaje y conductor
+      ride = Ride[ride_id]
+      driver = ride.driver
+
+      # Calcular el monto total a pagar
+      total_amount = CostService.calculate_total_amount(ride.start_location, end_location)
+
+      # Crear una transacción usando la API de Wompi
+      transaction_result = ApiService.make_transaction(driver.payment_source.token, total_amount)
+
+      if transaction_result.key?('error')
+        status 500
+        { error: 'Error al procesar la transacción con Wompi', mensaje: transaction_result.error }.to_json
+      else
+        # Marcar el viaje como completado y actualizar la información de pago en la base de datos
+        ride.update(end_location: end_location, status: 'completed')
+        { status: 'success', total_amount: total_amount, transaction_id: transaction_result['data']['id'] }.to_json
+      end
     else
       status 422
       { error: result.errors.to_h }.to_json
