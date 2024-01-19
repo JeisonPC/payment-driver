@@ -1,5 +1,6 @@
 # payment_source.rb
 require 'sequel'
+require 'dry-validation'
 
 class PaymentSource < Sequel::Model
   set_primary_key :id

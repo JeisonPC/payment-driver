@@ -27,3 +27,10 @@ class RequestRideContract < Dry::Validation::Contract
     required(:longitude).filled(:float)
   end
 end
+
+class CompleteRideContract < Dry::Validation::Contract
+  params do
+    required(:distance_traveled).filled(:float)
+    required(:time_elapsed).filled(:integer)
+  end
+end
