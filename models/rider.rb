@@ -1,12 +1,13 @@
+# rider.rb
 require 'dry-validation'
 class Rider < Sequel::Model
-  set_table_name 'riders'
-  attribute :nombre, String
-  attribute :apellido, String
-  attribute :email, String
-  attribute :current_location, 'geography(POINT)'
-  attribute :payment_method, String
-  attribute :edad, Integer
+  set_primary_key :id
+
+  column :nombre, String
+  column :apellido, String
+  column :email, String
+  column :current_location, 'geography(POINT)'
 
   one_to_many :rides
+  one_to_many :payment_sources
 end

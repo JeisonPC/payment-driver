@@ -1,3 +1,4 @@
+# driver.rb
 require 'dry-validation'
 
 class Driver < Sequel::Model
@@ -7,4 +8,6 @@ class Driver < Sequel::Model
   String :email
   column :'geography(POINT)', :current_location, type: 'geography(POINT)'
   Integer :edad
+
+  many_to_many :rides
 end

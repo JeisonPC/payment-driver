@@ -10,7 +10,7 @@ require_relative 'services/cost_service'
 require_relative 'contracts'
 
 require_relative 'models/payment_source'
-
+require_relative 'models/ride'
 
 
 before do
@@ -85,6 +85,35 @@ post '/create_payment_source' do
         # Utiliza un código de estado HTTP 200 en lugar de 'success' en la respuesta JSON
         { status: 200, payment_source_id: payment_source.id }.to_json
       end
+    else
+      status 422
+      { error: result.errors.to_h }.to_json
+    end
+  rescue StandardError => e
+    status 500
+    { error: "Error al procesar la solicitud: #{e.message}" }.to_json
+  end
+end
+
+# Viaje solicitado
+post '/request_ride' do
+  begin
+    input = JSON.parse(request.body.read, symbolize_names: true)
+
+    # Validar la entrada utilizando el contrato
+    result = RequestRideContract.new.call(input)
+
+    if result.success?
+      # Crear el viaje
+      ride = Ride.create(start_location: Sequel.function(:ST_GeographyFromText, "POINT(#{input[:latitude]} #{input[:longitude]})"))
+
+      # Asignar un conductor
+      driver = Driver.first
+
+      # Asignar el conductor al viaje
+      ride.update(driver: driver, status: 'ongoing')
+
+      { status: 'success', ride_id: ride.id }.to_json
     else
       status 422
       { error: result.errors.to_h }.to_json

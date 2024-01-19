@@ -1,9 +1,10 @@
+# ride.rb
 require 'dry-validation'
-class Trip < Sequel::Model
-  set_table_name 'rides'
-  attribute :start_location, 'geography(POINT)'
-  attribute :status, String
-  timestamp :created_at, default: Sequel::CURRENT_TIMESTAMP
+class Ride < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  column :start_location, 'geography(POINT)'
+  String :status
 
   many_to_one :rider
   many_to_one :driver

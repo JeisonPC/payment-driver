@@ -1,3 +1,4 @@
+# payment_source.rb
 require 'sequel'
 
 class PaymentSource < Sequel::Model

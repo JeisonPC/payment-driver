@@ -20,3 +20,10 @@ class CreatePaymentSourceContract < Dry::Validation::Contract
     end
   end
 end
+
+class RequestRideContract < Dry::Validation::Contract
+  params do
+    required(:latitude).filled(:float)
+    required(:longitude).filled(:float)
+  end
+end
